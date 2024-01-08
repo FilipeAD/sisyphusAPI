@@ -12,20 +12,20 @@ class UserProfile(AbstractUser):
         Male = 'Male'
         Female = 'Female'
 
-    sex = models.CharField(choices=Genders.choices, default=Genders.Male)
+    sex = models.CharField(choices=Genders.choices, default=Genders.Male, null=True)
     activity = models.CharField(  validators=[
             MinValueValidator(1),
             MaxValueValidator(6)
-        ])
+        ], null=True)
     age = models.IntegerField(
         validators=[
             MinValueValidator(18, message="Must be 18 or older."),
             MaxValueValidator(100, message="Must be 100 or younger.")
-        ]
-    )
-    height = models.FloatField()
-    weight = models.FloatField()
-    calorieIntake = models.IntegerField(help_text="Daily calorie Intake")
+        ],
+    null=True)
+    height = models.FloatField(null=True)
+    weight = models.FloatField(null=True)
+    calorieIntake = models.IntegerField(help_text="Daily calorie Intake", null=True)
     
      
     USERNAME_FIELD = 'email'
