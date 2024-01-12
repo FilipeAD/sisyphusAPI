@@ -45,8 +45,23 @@ INSTALLED_APPS = [
 
     'rest_framework_simplejwt.token_blacklist',
 
-    "corsheaders",
+    'corsheaders',
+
+    'django_apscheduler',
+
 ]
+
+SCHEDULER_CONFIG = {
+    
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:MemoryJobStore"
+    },
+    'apscheduler.executors.processpool': {
+        "type": "threadpool"
+    },
+}
+
+SCHEDULER_AUTOSTART = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

@@ -9,65 +9,13 @@ from rest_framework.request import Request
 from rest_framework.decorators import api_view
 from rest_framework import status
 from django.http import JsonResponse
-from .serializers import UserSerializer
+from .serializers import UserSerializer, ExerciseSerializer
 from .models import UserProfile, Exercises
 from rest_framework.decorators import api_view, APIView
 from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
-
-def fetchexerciseAPI():
-    serializer_class = Exercises
-
-    muscleGroup = [ 'abdominals', 
-                    'abductors', 
-                    'adductors', 
-                    'biceps', 
-                    'calves', 
-                    'chest',
-                    'forearms',
-                    'glutes',
-                    'hamstrings',
-                    'lats',
-                    'lower_back',
-                    'middle_back',
-                    'neck',
-                    'quadriceps',
-                    'traps',
-                    'triceps'
-                    ]
-    
-    for muscle in muscleGroup:
-        offset = 10
-        
-        api_url = 'https://api.api-ninjas.com/v1/exercises?muscle={}&&offset={}'.format(muscle, offset)
-    
-        response = requests.get(api_url, headers={'X-Api-Key': 'b9jGthrmp3JZxgUsYKy4KA==6pyIKaRO50A5sMVx'})
-
-        if response.status_code == requests.codes.ok:
-            offset+=10
-            
-            serializer = serializer_class(data=response.data)
-
-            if serializer.is_valid():
-                serializer.save()
-
-        else:
-            print("Error:", response.status_code, response.text)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    return Response(status=status.HTTP_201_CREATED);
-
-    schedule.every(10).seconds.do(job)
-    schedule.every(10).minutes.do(job)
-    schedule.every().hour.do(job)
-    schedule.every().day.at("10:30").do(job)
-    schedule.every(5).to(10).minutes.do(job)
-    schedule.every().monday.do(job)
-    schedule.every().wednesday.at("13:15").do(job)
-    schedule.every().day.at("12:42", "Europe/Amsterdam").do(job)
-    schedule.every().minute.at(":17").do(job)
 
 
 class UserListCreateView(APIView):
@@ -141,7 +89,7 @@ class ExercisesListCreateView(APIView):
         Create and List Exercises
     '''
 
-    serializer_class = Exercises
+    serializer_class = ExerciseSerializer
 
     def get(self, request:Request, *args, **kwargs):
 
@@ -165,12 +113,44 @@ class ExercisesListCreateView(APIView):
     
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+class Calories(APIView):
+    
+    def get(self, request:Request, height:int, weight:int, age:int, sex:str, activityLevel:str):
 
+        if sex == 'male':
+        
+            BMR = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age)
 
+        elif sex == 'female':
+        
+            BMR = 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age)
 
+        
+        match activityLevel:
+            case 'Sedentary':
+                multiplyer = 1.2
+            case 'Lightly active':
+                multiplyer = 1.375
+            case 'Moderately active':
+                multiplyer = 1.55
+            case 'Active':
+                multiplyer = 1.725
+            case 'Very active':
+                multiplyer = 1.9
 
+        result = BMR * multiplyer
+
+        return result
+    
+    def put(self,request:Request, *args, **kwargs):
+        pass
 
     
+        
+
+
+
+        
 
 
 
