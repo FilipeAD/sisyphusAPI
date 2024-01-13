@@ -1,14 +1,9 @@
 from rest_framework.views import APIView
-
-import schedule
-import time
-
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
 from rest_framework import status
-from django.http import JsonResponse
 from .serializers import UserSerializer, ExerciseSerializer
 from .models import UserProfile, Exercises
 from rest_framework.decorators import api_view, APIView
@@ -143,6 +138,7 @@ class Calories(APIView):
         return result
     
     def put(self,request:Request, *args, **kwargs):
+        
         pass
 
     
