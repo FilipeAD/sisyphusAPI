@@ -8,6 +8,12 @@ class CalorieSerializer(serializers.ModelSerializer):
         model = UserProfile
         field = 'calorieIntake'
 
+class CalorieSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = UserProfile
+        field = 'calorieIntake'
+
 
 class ExerciseSerializer(serializers.ModelSerializer):
 
@@ -43,6 +49,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         
         token['username'] = user.username
+        token['id'] = user.id
+        token['email'] = user.email
+        token['password'] = user.password
+        
+        
        
 
         return token

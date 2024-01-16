@@ -18,11 +18,12 @@ from APIapp.models import Exercises
 
 
 def fetchexerciseAPI():
-  
-    muscle_groups = [ 'abdominals', 
-                    'abductors', 
+
+    muscle_groups = [ 
+                    'abdominals', 
+                    'abductors',
                     'adductors', 
-                    'biceps', 
+                    'biceps',
                     'calves', 
                     'chest',
                     'forearms',
@@ -34,9 +35,10 @@ def fetchexerciseAPI():
                     'neck',
                     'quadriceps',
                     'traps',
-                    'triceps'
+                    'triceps',
                     ]
     
+    # for loop to cycle all muscles
     for muscle in muscle_groups:
         offset = 0
         

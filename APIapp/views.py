@@ -2,12 +2,13 @@ from rest_framework.views import APIView
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
-from .serializers import UserSerializer, ExerciseSerializer
+from .serializers import UserSerializer, ExerciseSerializer, CalorieSerializer
 from .models import UserProfile, Exercises
 from rest_framework.decorators import api_view, APIView
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
 
 # Create your views here.
@@ -45,6 +46,7 @@ class UserListCreateView(APIView):
 
 class UserRetrieveUpdateDeleteView(APIView):
 
+
     serializer_class = UserSerializer
 
     def get(self,request:Request, pk:int):
@@ -79,6 +81,8 @@ class UserRetrieveUpdateDeleteView(APIView):
         return Response("Product deleted", status=status.HTTP_204_NO_CONTENT);
 
 
+
+
 class ExercisesListCreateView(APIView):
     '''
         Create and List Exercises
@@ -109,18 +113,11 @@ class ExercisesListCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 class Calories(APIView):
+
+    serializer_class = CalorieSerializer
     
-    def get(self, request:Request, height:int, weight:int, age:int, sex:str, activityLevel:str):
+    def get(self, request:Request, heigth:int, weigth:int, age:int, sex:str, activityLevel:str):
 
-        if sex == 'male':
-        
-            BMR = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age)
-
-        elif sex == 'female':
-        
-            BMR = 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age)
-
-        
         match activityLevel:
             case 'Sedentary':
                 multiplyer = 1.2
@@ -132,18 +129,74 @@ class Calories(APIView):
                 multiplyer = 1.725
             case 'Very active':
                 multiplyer = 1.9
+            case _:
+                multiplyer = 1.375
+
+        if sex == 'Male':
+        
+            BMR = 66.47 + (13.75 * weigth) + (5.003 * heigth) - (6.755 * age)
+
+        elif sex == 'Female':
+        
+            BMR = 655.1 + (9.563 * weigth) + (1.850 * heigth) - (4.676 * age)
+        
 
         result = BMR * multiplyer
 
-        return result
+        return Response(result,  status=status.HTTP_200_OK)
     
-    def put(self,request:Request, *args, **kwargs):
-        
-        pass
+    def put(self,request:Request, user_name:str):
+
+        user = get_object_or_404(UserProfile, username=user_name)
+        serializer = self.serializer_class(instance=user, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                "message":"User Updated",
+                "data": serializer.data
+            }
+            
+            return Response(response, status=status.HTTP_200_OK);
+    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
-        
+      
+class TrainingPlanRetrieveUpdateDeletebyUserName(APIView):
 
+    serializer_class = UserSerializer
+
+    def get(self,request:Request, user_name:str):
+
+        user = get_object_or_404(UserProfile, username=user_name)
+        serializer = self.serializer_class(instance=user)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self,request:Request, user_name:str):
+
+        user = get_object_or_404(UserProfile, username=user_name)
+        serializer = self.serializer_class(instance=user, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                "message":"User Updated",
+                "data": serializer.data
+            }
+            
+            return Response(response, status=status.HTTP_200_OK);
+    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def delete(self,request:Request,user_name:str):
+
+        user = get_object_or_404(UserProfile, username=user_name)
+        user.delete()
+
+        return Response("Product deleted", status=status.HTTP_204_NO_CONTENT);
 
 
         

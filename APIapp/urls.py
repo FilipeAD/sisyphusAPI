@@ -17,6 +17,6 @@ urlpatterns = [
 
     path('exercises/' , views.ExercisesListCreateView.as_view(), name='exercises-list|create'),
 
-    path('calories/<int:weigth>&<int:heigth>&<str:sex>&<str:activitylevel>/', views.Calories.as_view(), name='calculateCalories')
+    path('calories/<int:weigth>&<int:heigth>&<str:sex>&<str:activityLevel>&<int:age>/', views.Calories.as_view(), name='calculateCalories')
 
 ]
