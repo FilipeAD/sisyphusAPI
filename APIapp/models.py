@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import ArrayField
 
 
 class UserProfile(AbstractUser):
@@ -70,5 +71,21 @@ class TrainingPlan(models.Model):
     def __str__(self):
         return self.plan_id
 
+
+
+class Progress(models.Model):
+    progress_id = models.AutoField(primary_key=True)
+    weigth_progress = ArrayField(models.FloatField(null=True))
+    weigth_Goal = models.FloatField(null=True)
+    workout_progress = models.IntegerField()
+    userfk = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+
+    class Meta:
+        ordering = ['progress_id']
+
+  
+    def __str__(self):
+        return self.progress_id
 
 

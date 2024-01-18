@@ -121,22 +121,22 @@ class Calories(APIView):
         match activityLevel:
             case 'Sedentary':
                 multiplyer = 1.2
-            case 'Lightly active':
+            case 'Lightly_active':
                 multiplyer = 1.375
-            case 'Moderately active':
+            case 'Moderately_active':
                 multiplyer = 1.55
             case 'Active':
                 multiplyer = 1.725
-            case 'Very active':
+            case 'Very_active':
                 multiplyer = 1.9
             case _:
                 multiplyer = 1.375
 
-        if sex == 'Male':
+        if sex == 'male':
         
             BMR = 66.47 + (13.75 * weigth) + (5.003 * heigth) - (6.755 * age)
 
-        elif sex == 'Female':
+        elif sex == 'female':
         
             BMR = 655.1 + (9.563 * weigth) + (1.850 * heigth) - (4.676 * age)
         
@@ -145,6 +145,7 @@ class Calories(APIView):
 
         return Response(result,  status=status.HTTP_200_OK)
     
+
     def put(self,request:Request, user_name:str):
 
         user = get_object_or_404(UserProfile, username=user_name)
@@ -163,43 +164,3 @@ class Calories(APIView):
 
     
       
-class TrainingPlanRetrieveUpdateDeletebyUserName(APIView):
-
-    serializer_class = UserSerializer
-
-    def get(self,request:Request, user_name:str):
-
-        user = get_object_or_404(UserProfile, username=user_name)
-        serializer = self.serializer_class(instance=user)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def put(self,request:Request, user_name:str):
-
-        user = get_object_or_404(UserProfile, username=user_name)
-        serializer = self.serializer_class(instance=user, data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            response = {
-                "message":"User Updated",
-                "data": serializer.data
-            }
-            
-            return Response(response, status=status.HTTP_200_OK);
-    
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def delete(self,request:Request,user_name:str):
-
-        user = get_object_or_404(UserProfile, username=user_name)
-        user.delete()
-
-        return Response("Product deleted", status=status.HTTP_204_NO_CONTENT);
-
-
-        
-
-
-
