@@ -24,6 +24,6 @@ urlpatterns = [
     path('training-plans/', views.TrainingPlanCreateView.as_view(), name='training-plan-list-create'),
     path('training-plans/<str:user_name>/',views.TrainingPlanRetrieveUpdateDeletebyUserName.as_view(), name='training-plan-retrieve-update-delete'),
 
-    
-
+    path('equipment/<str:muscle_group>/', views.equipment_by_muscle, name='equipment_by_muscle'),
 ]
+

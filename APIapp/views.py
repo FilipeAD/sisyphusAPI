@@ -9,6 +9,8 @@ from .models import UserProfile, Exercises, TrainingPlan
 from rest_framework.decorators import api_view, APIView
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.db import connection
+
 
 
 class UserListCreateView(APIView):
@@ -237,3 +239,24 @@ class TrainingPlanRetrieveUpdateDeletebyUserName(APIView):
 
         return Response("Product deleted", status=status.HTTP_204_NO_CONTENT);
 
+@api_view(['GET'])
+def equipment_by_muscle(request, muscle_group):
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            '''
+            SELECT equipment
+            FROM public."APIapp_exercises"
+            WHERE muscle = %s
+            GROUP BY equipment
+            ''',
+            [muscle_group]
+        )
+        equipment_list = [row[0] for row in cursor.fetchall()]
+
+  
+    response_data = {
+        'equipment_list': list(equipment_list)
+    }
+
+    return Response(response_data, status=status.HTTP_200_OK)
