@@ -16,7 +16,14 @@ urlpatterns = [
     path('user/<int:pk>/' , views.UserRetrieveUpdateDeleteView.as_view(), name='user-Detail|Update|Delete'),
 
     path('exercises/' , views.ExercisesListCreateView.as_view(), name='exercises-list|create'),
+    path('exercises/<str:type>/<str:muscle>/<str:equipment>/<str:difficulty>/', views.ExerciseFilter.as_view(), name='exercise-specify'),
 
-    path('calories/<int:weigth>&<int:heigth>&<str:sex>&<str:activityLevel>&<int:age>/', views.Calories.as_view(), name='calculateCalories')
+    path('calculate-calories/<int:heigth>/<int:weigth>/<int:age>/<str:sex>/<str:activityLevel>/', views.calculate_calories, name='calculate-calories'),
+    path('update-calories/<int:pk>/', views.update_calories, name='update-calories'),
+
+    path('training-plans/', views.TrainingPlanCreateView.as_view(), name='training-plan-list-create'),
+    path('training-plans/<str:user_name>/',views.TrainingPlanRetrieveUpdateDeletebyUserName.as_view(), name='training-plan-retrieve-update-delete'),
+
+    
 
 ]

@@ -41,6 +41,7 @@ class UserProfile(AbstractUser):
 
 
 class Exercises(models.Model):
+
     exercise_id = models.AutoField(primary_key=True)
     name = models.CharField(help_text='exercise name')
     type = models.CharField(help_text='exercise type')
@@ -48,6 +49,9 @@ class Exercises(models.Model):
     equipment = models.CharField(help_text='needed equipment')
     difficulty = models.CharField(help_text='exercise difficulty')
     instructions = models.TextField(help_text='exercise instructions')
+
+
+
 
     class Meta:
         ordering = ['exercise_id']

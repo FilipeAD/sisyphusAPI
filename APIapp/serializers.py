@@ -1,19 +1,13 @@
 from rest_framework import serializers
-from .models import UserProfile, Exercises
+from .models import UserProfile, Exercises, TrainingPlan
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-class CalorieSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = UserProfile
-        field = 'calorieIntake'
 
-class CalorieSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = UserProfile
-        field = 'calorieIntake'
+class TrainingPlanSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = TrainingPlan
+        fields = '__all__'
 
 class ExerciseSerializer(serializers.ModelSerializer):
 
